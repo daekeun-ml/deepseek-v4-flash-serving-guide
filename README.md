@@ -1,4 +1,4 @@
-# deepseek-v4-flash-serving-guide
+# DeepSeek-V4-Flash-0731 Serving Guide
 
 RTX 6000 Pro Blackwell 2장에서 DeepSeek-V4-Flash-0731을 vLLM으로 서빙하는 가이드입니다. 구성 근거와 실제로 부딪힌 문제, 해결 과정을 함께 정리했습니다.
 
@@ -11,7 +11,7 @@ RTX 6000 Pro Blackwell 2장에서 DeepSeek-V4-Flash-0731을 vLLM으로 서빙하
 
 **적합한 경우**
 - GPU 메모리 96 GiB 카드 2장 이상을 보유
-- DeepSeek-V4-Flash를 로컬/온프레미스에 직접 배포
+- DeepSeek-V4-Flash-0731을 로컬/온프레미스에 직접 배포
 - vLLM을 uv 또는 Docker로 실행하는 데 익숙함
 
 **적합하지 않은 경우**
