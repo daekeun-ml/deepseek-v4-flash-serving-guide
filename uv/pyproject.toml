@@ -1,0 +1,7 @@
+[project]
+name = "deepseek-v4-flash-serving-guide"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "vllm==0.25.0",
+]

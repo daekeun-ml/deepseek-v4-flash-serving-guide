@@ -1,6 +1,6 @@
 """DeepSeek-V4-Flash-0731 vLLM 서버용 OpenAI 호환 클라이언트 예제.
 
-먼저 serve_deepseek_v4_flash.sh 로 서버를 띄운 뒤 실행.
+먼저 docker/serve.sh 로 서버를 띄운 뒤 실행.
     uv run --with openai client_example.py
 """
 

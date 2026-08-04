@@ -11,3 +11,4 @@ bench_results/
 .venv/
 __pycache__/
 *.pyc
+uv.lock
