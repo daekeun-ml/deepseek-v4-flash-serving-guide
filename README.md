@@ -1,14 +1,14 @@
 # DeepSeek-V4-Flash-0731 Serving Guide
 
-RTX 6000 Pro Blackwell 2장으로 284B MoE 모델을 서빙한 기록입니다. 구성 근거, 실제로 부딪힌 문제, 실측 성능을 함께 정리했습니다.
+RTX 6000 Pro Blackwell 2장(SM120, AWS `g7e.12xlarge`)으로 **DeepSeek-V4-Flash-0731**(284B MoE, 활성 13B)을 서빙한 기록입니다. 구성 근거, 실제로 부딪힌 문제, 실측 성능을 함께 정리했습니다.
 
-[Why this guide](#why-this-guide) | [Results](#results) | [Is this for you](#is-this-for-you) | [Setup](#setup) | [Run](#run) | [Cost & cleanup](#cost--cleanup) | [Documentation](#documentation)
+[Why this guide](#why-this-guide) | [Results](#results) | [Is this for you](#is-this-for-you) | [Setup](#setup) | [Run (vLLM)](#run-vllm) | [Run (GGUF)](#run-gguf) | [Cost & cleanup](#cost--cleanup) | [Documentation](#documentation)
 
 ## Why this guide
 
-**H100/H200/B200/B300이 부담스러울 때 가장 먼저 떠오르는 대안이 RTX 6000 Pro Blackwell입니다.** 96 GiB를 장당 제공하고 FP4를 네이티브로 지원해서, 두 장이면 148.7 GiB 모델이 이론상 들어갑니다. AWS에서는 `g7e` 계열이 이 GPU를 씁니다.
+**H100/H200/B200/B300이 부담스러울 때 가장 먼저 떠오르는 대안이 RTX 6000 Pro Blackwell입니다.** 장당 96 GiB를 제공하고 FP4를 네이티브로 지원하므로, 두 장이면 192 GiB로 148.7 GiB 가중치를 수용할 수 있습니다. AWS에서는 `g7e` 계열이 이 GPU를 씁니다.
 
-문제는 "이론상 들어간다"와 "실제로 서빙된다" 사이의 간격입니다. 이 GPU는 데이터센터 GPU와 세 가지가 다릅니다.
+문제는 용량 계산이 맞아도 실제 서빙이 순탄하지는 않다는 점입니다. 이 GPU는 데이터센터 GPU와 세 가지가 다릅니다.
 
 | | RTX 6000 Pro (g7e) | H200 (p5en) | B200 (p6-b200) |
 |---|---|---|---|
@@ -17,7 +17,7 @@ RTX 6000 Pro Blackwell 2장으로 284B MoE 모델을 서빙한 기록입니다. 
 | GPU 간 연결 | **NVLink 없음, PCIe Gen5** | NVLink | NVLink |
 | FP4 native | 지원 | 미지원 (marlin 경유) | 지원 |
 
-그리고 **SM120 아키텍처는 커널 지원이 아직 고르지 않습니다.** 이 차이가 실제로 문제를 만듭니다.
+그리고 이 GPU의 **SM120**(compute capability 12.0) 아키텍처는 커널 지원이 아직 고르지 않습니다. 이 차이가 실제로 문제를 만듭니다.
 
 - 추측 디코딩(DSpark)이 vLLM에서 크래시합니다. FlashInfer에 SM120용 커널이 없습니다
 - FlashInfer 버전이 vLLM이 pin한 것보다 높아야 기동됩니다
@@ -38,9 +38,9 @@ RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시 구성입니다.
 | 131K 컨텍스트 기준 동시 요청 | **2.3개** |
 | 기동 시간 | 5~6분 (가중치 로딩 + CUDA 그래프 캡처) |
 
-**처리량과 지연시간** (입력 204, 출력 200토큰)
+**Throughput & latency** (입력 204, 출력 200토큰)
 
-| 동시성 | TTFT p50 | TTFT p95 | TPOT p50 | 출력 tok/s |
+| Concurrency | TTFT p50 | TTFT p95 | TPOT p50 | Output tok/s |
 |---|---|---|---|---|
 | 1 | 62.8ms | 64.0ms | 9.2ms | 105 |
 | 8 | 210ms | 228ms | 17.1ms | 446 |
@@ -64,13 +64,15 @@ RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시 구성입니다.
 
 | 상황 | 대안 |
 |---|---|
-| GPU 1장뿐 | GGUF Q2 양자화(92.3 GiB)로 llama.cpp 서빙 → [backends.md](docs/backends.md) |
+| GPU 1장뿐 | GGUF Q2(92.3 GiB)로 llama-server 서빙 → [Run (GGUF)](#run-gguf) |
 | 모델만 빠르게 써보고 싶다 | OpenRouter (`$0.09/$0.18` per 1M tokens) 또는 DeepSeek API |
 | 매니지드 엔드포인트가 필요 | [sagemaker/](sagemaker/README.md) 또는 [AWS 공식 노트북](https://github.com/aws-samples/sagemaker-genai-hosting-examples/tree/main/01-models/DeepSeek/DeepSeek-V4) |
 | H100/H200/B200을 쓸 수 있다 | 이 가이드의 우회는 대부분 SM120 전용이라 불필요 |
-| 혼자 실험용, GPU 여유 적음 | llama.cpp + DSpark (75 tok/s) → [llamacpp/](llamacpp/README.md) |
+| 혼자 실험용, GPU 여유 적음 | llama-server + DSpark (75 tok/s) → [Run (GGUF)](#run-gguf) |
 
 ## Setup
+
+vLLM 설치입니다. GGUF로만 쓸 거면 [Run (GGUF)](#run-gguf)로 건너뛰세요.
 
 두 방법 중 하나를 고릅니다. **서버가 뜨면 완전히 동일하게 동작합니다.**
 
@@ -99,7 +101,9 @@ uvx --from huggingface_hub hf download deepseek-ai/DeepSeek-V4-Flash-0731 \
   --local-dir /opt/dlami/nvme/models/DeepSeek-V4-Flash-0731
 ```
 
-## Run
+## Run (vLLM)
+
+원본 가중치를 그대로 씁니다. 이 모델은 단일 정밀도가 아니라 **전문가 가중치는 FP4(4비트), 나머지는 FP8(8비트)**로 이미 양자화된 상태로 배포됩니다(`expert_dtype: fp4`, `quant_method: fp8`). 그래서 추가 양자화 없이 148.7 GiB입니다.
 
 **Docker**
 
@@ -132,14 +136,16 @@ curl http://localhost:8000/v1/models
 uv run --with openai python3 client_example.py
 ```
 
-**다른 백엔드로도 서빙할 수 있습니다**
+## Run (GGUF)
 
-GGUF 양자화본을 쓰면 메모리를 줄일 수 있고, vLLM에서 막힌 DSpark 추측 디코딩도 동작합니다.
+**GGUF**는 llama.cpp 계열이 읽는 파일 형식이고, 원본을 다시 2~8비트로 재양자화한 것입니다. unsloth가 배포하는 것을 씁니다.
+
+메모리가 줄고(Q2는 92.3 GiB로 GPU 1장에 들어감), vLLM에서 막힌 DSpark 추측 디코딩도 동작합니다. 대신 처리량은 낮습니다. 원본이 이미 4비트라 Q4로 내려도 크게 줄지 않는다는 점도 알아두세요.
 
 ```bash
 bash llamacpp/download.sh UD-Q2_K_XL   # GGUF 96.8 GiB (공통)
 
-# llama.cpp: 약 30초 후 :8001
+# llama-server: 약 30초 후 :8001
 bash llamacpp/serve.sh
 DSPARK=1 bash llamacpp/serve.sh        # 추측 디코딩 (단일 사용자에만 이득)
 
@@ -148,11 +154,11 @@ bash ollama/merge.sh
 bash ollama/serve.sh
 ```
 
-| 백엔드 | c=8 처리량 | 특징 |
-|---|---|---|
-| vLLM FP8 | **407 tok/s** | 처리량 최상. 다중 사용자 서빙 |
-| [llama.cpp](llamacpp/README.md) | 218 tok/s | 양자화로 메모리 절감, DSpark 동작, 로드 30초 |
-| [Ollama](ollama/README.md) | 124 tok/s | 모델 관리 편의. 분할 GGUF 병합 필요 |
+| Backend | Weights | Throughput (c=8) | Notes |
+|---|---|---|---|
+| vLLM | FP4/FP8 148.7 GB | **407 tok/s** | Highest throughput, best for multi-user serving |
+| [llama-server](llamacpp/README.md) | GGUF Q2 96.8 GB | 218 tok/s | 30s load, DSpark works, best tail latency (p95 654ms) |
+| [Ollama](ollama/README.md) | GGUF Q2 96.8 GB | 124 tok/s | Easiest model management, needs GGUF merge |
 
 실측 비교와 선택 기준은 [backends.md](docs/backends.md)를 보세요.
 
@@ -173,8 +179,6 @@ nvidia-smi --query-gpu=index,memory.used --format=csv
 
 **SageMaker 엔드포인트를 만들었다면** 삭제하지 않는 한 시간당 과금이 계속됩니다. 노트북 맨 아래 Cleanup 셀을 실행하세요([sagemaker/](sagemaker/README.md)).
 
-**디스크도 확인하세요.** 가중치 155 GiB에 GGUF 양자화본까지 받으면 수백 GiB가 됩니다. 인스턴스 스토어(`/opt/dlami/nvme`)에 뒀다면 인스턴스 중지 시 소실되므로, 다시 받는 시간을 감안하세요.
-
 **트래픽이 적다면 자체 서빙이 손해일 수 있습니다.** OpenRouter 기준 이 모델은 입력 $0.09, 출력 $0.18 per 1M tokens입니다. 하루 몇백 건 수준이면 API가 압도적으로 싸고, GPU를 꽉 채워 돌릴 때 자체 서빙이 유리해집니다.
 
 ## Documentation
@@ -184,7 +188,7 @@ nvidia-smi --query-gpu=index,memory.used --format=csv
 | 문서 | 내용 |
 |---|---|
 | [deepseek-v4-flash.md](docs/deepseek-v4-flash.md) | 모델 아키텍처, 체크포인트 4종 차이 |
-| [benchmark.md](docs/benchmark.md) | 시나리오 5종 처리량과 지연시간 (p50/p95/p99) |
+| [benchmark.md](docs/benchmark.md) | 시나리오 5종 throughput과 latency (p50/p95/p99) |
 | [tuning.md](docs/tuning.md) | vLLM 최적화. 프리셋 3종, 튜닝 절차, `/metrics` 진단 |
 | [backends.md](docs/backends.md) | vLLM vs llama.cpp vs Ollama 실측, GGUF 양자화 4종 |
 | [serving.md](docs/serving.md) | 모델별 GPU 사이징 계산 (V4-Pro, GLM-5.2, Kimi K3 비교) |
