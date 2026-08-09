@@ -1,0 +1,18 @@
+{
+  "label": "opt-kv-q8-c8",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 8,
+  "n_requests": 32,
+  "completed": 32,
+  "failed": 0,
+  "wall_seconds": 28.1,
+  "ttft_p50_ms": 339.7,
+  "ttft_p95_ms": 618.5,
+  "tpot_p50_ms": 33.71,
+  "tpot_p95_ms": 35.47,
+  "e2el_p50_ms": 6957.9,
+  "e2el_p95_ms": 7251.7,
+  "output_tok_per_s": 223.2,
+  "req_per_s": 1.14
+}

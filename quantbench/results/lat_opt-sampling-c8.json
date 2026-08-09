@@ -1,0 +1,18 @@
+{
+  "label": "opt-sampling-c8",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 8,
+  "n_requests": 32,
+  "completed": 32,
+  "failed": 0,
+  "wall_seconds": 27.6,
+  "ttft_p50_ms": 383.5,
+  "ttft_p95_ms": 635.1,
+  "tpot_p50_ms": 32.91,
+  "tpot_p95_ms": 34.84,
+  "e2el_p50_ms": 6857.8,
+  "e2el_p95_ms": 7110.4,
+  "output_tok_per_s": 226.5,
+  "req_per_s": 1.16
+}

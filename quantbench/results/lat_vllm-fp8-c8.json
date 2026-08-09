@@ -1,0 +1,18 @@
+{
+  "label": "vllm-fp8-c8",
+  "url": "http://localhost:8000/v1/chat/completions",
+  "model": "deepseek-v4-flash",
+  "concurrency": 8,
+  "n_requests": 32,
+  "completed": 32,
+  "failed": 0,
+  "wall_seconds": 14.5,
+  "ttft_p50_ms": 186.2,
+  "ttft_p95_ms": 2011.4,
+  "tpot_p50_ms": 16.3,
+  "tpot_p95_ms": 17.11,
+  "e2el_p50_ms": 3176.7,
+  "e2el_p95_ms": 4988.2,
+  "output_tok_per_s": 407.3,
+  "req_per_s": 2.21
+}

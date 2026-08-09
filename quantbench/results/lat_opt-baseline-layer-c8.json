@@ -1,0 +1,18 @@
+{
+  "label": "opt-baseline-layer-c8",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 8,
+  "n_requests": 32,
+  "completed": 32,
+  "failed": 0,
+  "wall_seconds": 27.7,
+  "ttft_p50_ms": 384.0,
+  "ttft_p95_ms": 686.6,
+  "tpot_p50_ms": 33.13,
+  "tpot_p95_ms": 34.85,
+  "e2el_p50_ms": 6831.3,
+  "e2el_p95_ms": 7169.0,
+  "output_tok_per_s": 226.5,
+  "req_per_s": 1.16
+}

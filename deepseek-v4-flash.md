@@ -11,8 +11,8 @@
 일반적인 언어모델은 질문이 들어오면 모델 전체를 다 써서 답을 계산합니다. **MoE 모델은 "전문가"라고 부르는 여러 개의 서브 네트워크를 갖고 있고, 매 토큰마다 그중 일부만 골라 씁니다.**
 
 - 이 모델엔 전문가가 **256명** 있고, 매 토큰마다 그중 **6명**만 호출됩니다 (`num_experts_per_tok: 6`).
-- "전체 파라미터(284B)"는 256명 전문가를 다 합친 크기 — **메모리에는 전부 올라가 있어야 함.**
-- "활성 파라미터(13B)"는 매 토큰 계산에 실제로 쓰이는 양 — **연산량(속도)은 이 숫자로 결정.**
+- "전체 파라미터(284B)"는 256명 전문가를 다 합친 크기입니다. **메모리에는 전부 올라가 있어야 함.**
+- "활성 파라미터(13B)"는 매 토큰 계산에 실제로 쓰이는 양입니다. **연산량(속도)은 이 숫자로 결정.**
 
 비유하면: 회사에 256명의 전문가가 상주(그래서 사무실 임대료=메모리는 256명분 필요)하지만, 프로젝트 하나마다 실제로 회의에 부르는 사람은 6명뿐(그래서 인건비=연산량은 6명분).
 
@@ -27,13 +27,13 @@ DeepSeek-V4 패밀리에는 두 가지 변형이 있습니다.
 | 가중치 실제 용량 | 148.7 GiB | 805.4 GiB |
 | 필요 GPU | 저렴한 편 (GPU 2장) | H200 이상 8장 |
 
-Pro가 파라미터 수는 6배 더 크지만, 가중치 용량은 Flash가 Pro의 1/5 수준입니다 — 이유는 아래 참고. Flash는 활성 파라미터가 훨씬 작으면서도 agentic(도구 사용, 코딩 등) 성능이 Pro를 앞선다는 점이 특징입니다.
+Pro가 파라미터 수는 6배 더 크지만, 가중치 용량은 Flash가 Pro의 1/5 수준입니다(이유는 아래 참고). Flash는 활성 파라미터가 훨씬 작으면서도 agentic(도구 사용, 코딩 등) 성능이 Pro를 앞선다는 점이 특징입니다.
 
 ## 경량화 방식
 
 ### FP4 양자화
 
-보통 모델 가중치는 16비트(BF16) 실수로 저장합니다. 이 모델의 전문가 가중치는 **FP4**(4비트)로 저장됩니다 — 숫자를 표현하는 정밀도를 확 낮춰서 용량을 줄인 것. 정밀도는 떨어지지만 전문가는 어차피 매번 6명만 쓰이니 전체 영향이 제한적입니다.
+보통 모델 가중치는 16비트(BF16) 실수로 저장합니다. 이 모델의 전문가 가중치는 **FP4**(4비트)로 저장됩니다. 숫자를 표현하는 정밀도를 확 낮춰서 용량을 줄인 것입니다. 정밀도는 떨어지지만 전문가는 어차피 매번 6명만 쓰이니 전체 영향이 제한적입니다.
 
 - 파라미터당 저장 용량 = **0.562 바이트** (16비트=2바이트의 1/4 정도)
 - 이 덕에 284B 파라미터가 148.7 GiB(약 160GB)에 다 들어갑니다.
@@ -66,7 +66,7 @@ Pro가 파라미터 수는 6배 더 크지만, 가중치 용량은 Flash가 Pro�
 | NVFP4 | `nvidia/DeepSeek-V4-Flash-NVFP4` | MTP | NVIDIA가 재양자화한 버전 |
 | DSpark | `deepseek-ai/DeepSeek-V4-Flash-DSpark` | DSpark | preview 가중치 + DSpark 모듈만 추가 |
 
-**\*추측 디코딩(speculative decoding)** — 작은 초안 모델이 여러 토큰을 미리 예측해두고, 본 모델이 이를 검증만 하면서 속도를 높이는 기법. `MTP`와 `DSpark`는 이 초안을 만드는 두 가지 방식이며, **체크포인트마다 둘 중 하나만 내장**되어 있어 섞어 쓸 수 없습니다. DSpark의 구조와 RTX 6000 Pro에서 발생하는 문제는 [troubleshooting/dspark-sm120-crash.md](troubleshooting/dspark-sm120-crash.md)에서 다룹니다.
+**\*추측 디코딩(speculative decoding)**: 작은 초안 모델이 여러 토큰을 미리 예측해두고, 본 모델이 이를 검증만 하면서 속도를 높이는 기법. `MTP`와 `DSpark`는 이 초안을 만드는 두 가지 방식이며, **체크포인트마다 둘 중 하나만 내장**되어 있어 섞어 쓸 수 없습니다. DSpark의 구조와 RTX 6000 Pro에서 발생하는 문제는 [troubleshooting/dspark-sm120-crash.md](troubleshooting/dspark-sm120-crash.md)에서 다룹니다.
 
 > 이 가이드는 최신 릴리즈인 **0731**을 선택했습니다. 다만 DSpark를 쓰려면 알려진 버그를 피해야 하므로, 최종적으로는 **추측 디코딩 없이** 서빙했습니다. 실행 방법은 [README.md](README.md) 참고.
 
@@ -81,6 +81,6 @@ Pro가 파라미터 수는 6배 더 크지만, 가중치 용량은 Flash가 Pro�
 
 ## 참고 링크
 
-- [deepseek-ai/DeepSeek-V4-Flash-0731](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731) — 이 가이드에서 쓴 체크포인트
-- [deepseek-ai/DeepSeek-V4-Flash config.json](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/config.json) — 원본 스펙
-- [vLLM 공식 recipe](https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4-Flash) — 하드웨어별 실행 명령 모음
+- [deepseek-ai/DeepSeek-V4-Flash-0731](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731) 이 가이드에서 쓴 체크포인트
+- [deepseek-ai/DeepSeek-V4-Flash config.json](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/config.json) 원본 스펙
+- [vLLM 공식 recipe](https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4-Flash) 하드웨어별 실행 명령 모음

@@ -1,0 +1,18 @@
+{
+  "label": "lcpp-q2-c1",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 1,
+  "n_requests": 5,
+  "completed": 5,
+  "failed": 0,
+  "wall_seconds": 15.7,
+  "ttft_p50_ms": 71.3,
+  "ttft_p95_ms": 455.3,
+  "tpot_p50_ms": 15.62,
+  "tpot_p95_ms": 16.01,
+  "e2el_p50_ms": 3060.4,
+  "e2el_p95_ms": 3453.8,
+  "output_tok_per_s": 61.2,
+  "req_per_s": 0.32
+}

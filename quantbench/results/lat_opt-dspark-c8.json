@@ -1,0 +1,18 @@
+{
+  "label": "opt-dspark-c8",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 8,
+  "n_requests": 32,
+  "completed": 32,
+  "failed": 0,
+  "wall_seconds": 46.3,
+  "ttft_p50_ms": 243.6,
+  "ttft_p95_ms": 934.5,
+  "tpot_p50_ms": 53.15,
+  "tpot_p95_ms": 62.83,
+  "e2el_p50_ms": 10331.4,
+  "e2el_p95_ms": 12667.9,
+  "output_tok_per_s": 132.9,
+  "req_per_s": 0.69
+}

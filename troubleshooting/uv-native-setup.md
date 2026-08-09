@@ -95,7 +95,7 @@ ln -sfn libcudart.so.13 "$CU13_DIR/lib/libcudart.so"
 
 ## 참고로, FlashInfer 버전 문제는 별개
 
-위 4가지를 해결해도 [flashinfer-version-mismatch.md](flashinfer-version-mismatch.md)에서 설명하는 FlashInfer 버전 pin 문제는 그대로 남아있습니다 — 이건 도커든 uv든 vLLM 0.25.0을 쓰면 똑같이 겪는 문제라 별도 문서로 분리했습니다.
+위 4가지를 해결해도 [flashinfer-version-mismatch.md](flashinfer-version-mismatch.md)에서 설명하는 FlashInfer 버전 pin 문제는 그대로 남아있습니다. 이건 도커든 uv든 vLLM 0.25.0을 쓰면 똑같이 겪는 문제라 별도 문서로 분리했습니다.
 
 ## 검증 결과
 

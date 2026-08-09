@@ -1,0 +1,18 @@
+{
+  "label": "ollama-q2-c1",
+  "url": "http://localhost:11434/v1/chat/completions",
+  "model": "ds-q2",
+  "concurrency": 1,
+  "n_requests": 5,
+  "completed": 5,
+  "failed": 0,
+  "wall_seconds": 16.5,
+  "ttft_p50_ms": 205.5,
+  "ttft_p95_ms": 228.4,
+  "tpot_p50_ms": 16.4,
+  "tpot_p95_ms": 16.52,
+  "e2el_p50_ms": 3293.9,
+  "e2el_p95_ms": 3322.9,
+  "output_tok_per_s": 57.7,
+  "req_per_s": 0.3
+}

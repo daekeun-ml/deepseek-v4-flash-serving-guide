@@ -58,8 +58,8 @@ export FLASHINFER_DISABLE_VERSION_CHECK=1
 
 ## 검증 결과
 
-패치 적용 후 서버가 정상 기동했고, KV 캐시 확보 및 추론 요청까지 확인했습니다. 전체 실행 흐름은 [README.md](README.md) 참고.
+패치 적용 후 서버가 정상 기동했고, KV 캐시 확보 및 추론 요청까지 확인했습니다. 전체 실행 흐름은 [../README.md](../README.md) 참고.
 
 ## 참고 링크
 
-- [vllm-project/vllm#48054](https://github.com/vllm-project/vllm/issues/48054) — 이 이슈
+- [vllm-project/vllm#48054](https://github.com/vllm-project/vllm/issues/48054) 이 이슈

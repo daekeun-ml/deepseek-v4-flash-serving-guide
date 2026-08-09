@@ -1,0 +1,18 @@
+{
+  "label": "opt-ub2048-c8",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 8,
+  "n_requests": 32,
+  "completed": 32,
+  "failed": 0,
+  "wall_seconds": 27.6,
+  "ttft_p50_ms": 383.6,
+  "ttft_p95_ms": 638.9,
+  "tpot_p50_ms": 32.96,
+  "tpot_p95_ms": 34.7,
+  "e2el_p50_ms": 6835.0,
+  "e2el_p95_ms": 7123.9,
+  "output_tok_per_s": 226.8,
+  "req_per_s": 1.16
+}

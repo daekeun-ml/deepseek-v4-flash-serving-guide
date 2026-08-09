@@ -1,0 +1,18 @@
+{
+  "label": "opt-ncmoe20-c1",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 1,
+  "n_requests": 5,
+  "completed": 5,
+  "failed": 0,
+  "wall_seconds": 33.3,
+  "ttft_p50_ms": 129.1,
+  "ttft_p95_ms": 1983.8,
+  "tpot_p50_ms": 32.64,
+  "tpot_p95_ms": 33.7,
+  "e2el_p50_ms": 6233.6,
+  "e2el_p95_ms": 8163.5,
+  "output_tok_per_s": 28.4,
+  "req_per_s": 0.15
+}

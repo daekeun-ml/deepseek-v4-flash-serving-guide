@@ -1,0 +1,18 @@
+{
+  "label": "opt-fa-on-c1",
+  "url": "http://localhost:8001/v1/chat/completions",
+  "model": "x",
+  "concurrency": 1,
+  "n_requests": 5,
+  "completed": 5,
+  "failed": 0,
+  "wall_seconds": 15.6,
+  "ttft_p50_ms": 71.3,
+  "ttft_p95_ms": 381.3,
+  "tpot_p50_ms": 15.81,
+  "tpot_p95_ms": 16.09,
+  "e2el_p50_ms": 3052.3,
+  "e2el_p95_ms": 3375.7,
+  "output_tok_per_s": 60.8,
+  "req_per_s": 0.32
+}
