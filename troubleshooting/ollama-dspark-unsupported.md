@@ -128,7 +128,7 @@ Ollama가 `draft-mtp`로 고정한다는 것은, **MTP를 내장한 체크포인
 | `DeepSeek-V4-Flash` (preview) | MTP | 가능할 수 있음 (미검증) |
 | `nvidia/DeepSeek-V4-Flash-NVFP4` | MTP | 가능할 수 있음 (미검증) |
 
-다만 0731이 preview보다 agentic 성능이 크게 향상된 정식 릴리즈이므로, 추측 디코딩을 위해 preview로 되돌리는 것은 권하지 않습니다. 체크포인트별 차이는 [../deepseek-v4-flash.md](../deepseek-v4-flash.md)를 보세요.
+다만 0731이 preview보다 agentic 성능이 크게 향상된 정식 릴리즈이므로, 추측 디코딩을 위해 preview로 되돌리는 것은 권하지 않습니다. 체크포인트별 차이는 [deepseek-v4-flash.md](../docs/deepseek-v4-flash.md)를 보세요.
 
 ## 세 백엔드 정리
 
@@ -144,5 +144,5 @@ Ollama가 `draft-mtp`로 고정한다는 것은, **MTP를 내장한 체크포인
 
 - [dspark-sm120-crash.md](dspark-sm120-crash.md) vLLM에서 DSpark가 크래시하는 원인
 - [../llamacpp/README.md](../llamacpp/README.md) DSpark 사용법
-- [../backends.md](../backends.md) 백엔드 실측 비교
+- [backends.md](../docs/backends.md) 백엔드 실측 비교
 - [Ollama Modelfile](https://docs.ollama.com/modelfile) 지시어 목록

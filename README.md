@@ -46,11 +46,11 @@ RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시 구성입니다.
 | 8 | 210ms | 228ms | 17.1ms | 446 |
 | 32 | 497ms | **10,458ms** | 33.2ms | **701** |
 
-동시성을 32로 올리면 처리량은 6.7배가 되지만 TTFT p95는 163배 나빠집니다. **SLA는 p50이 아니라 p95로 잡아야 합니다.** 시나리오별 상세는 [benchmark.md](benchmark.md)에 있습니다.
+동시성을 32로 올리면 처리량은 6.7배가 되지만 TTFT p95는 163배 나빠집니다. **SLA는 p50이 아니라 p95로 잡아야 합니다.** 시나리오별 상세는 [benchmark.md](docs/benchmark.md)에 있습니다.
 
 **검증한 기능**: 일반 채팅, think-high 추론 모드, tool calling (uv와 Docker 양쪽)
 
-**병목은 KV 캐시입니다.** 가중치 148.7 GiB가 192 GiB 중 대부분을 차지해 KV 캐시로 7.75 GiB만 남습니다. 컨텍스트를 65K로 줄이면 동시 요청이 4.6개, 32K면 9.2개로 늘어납니다. 프리셋 3종은 [tuning.md](tuning.md)에 정리했습니다.
+**병목은 KV 캐시입니다.** 가중치 148.7 GiB가 192 GiB 중 대부분을 차지해 KV 캐시로 7.75 GiB만 남습니다. 컨텍스트를 65K로 줄이면 동시 요청이 4.6개, 32K면 9.2개로 늘어납니다. 프리셋 3종은 [tuning.md](docs/tuning.md)에 정리했습니다.
 
 ## Is this for you
 
@@ -64,7 +64,7 @@ RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시 구성입니다.
 
 | 상황 | 대안 |
 |---|---|
-| GPU 1장뿐 | GGUF Q2 양자화(92.3 GiB)로 llama.cpp 서빙 → [backends.md](backends.md) |
+| GPU 1장뿐 | GGUF Q2 양자화(92.3 GiB)로 llama.cpp 서빙 → [backends.md](docs/backends.md) |
 | 모델만 빠르게 써보고 싶다 | OpenRouter (`$0.09/$0.18` per 1M tokens) 또는 DeepSeek API |
 | 매니지드 엔드포인트가 필요 | [sagemaker/](sagemaker/README.md) 또는 [AWS 공식 노트북](https://github.com/aws-samples/sagemaker-genai-hosting-examples/tree/main/01-models/DeepSeek/DeepSeek-V4) |
 | H100/H200/B200을 쓸 수 있다 | 이 가이드의 우회는 대부분 SM120 전용이라 불필요 |
@@ -154,7 +154,7 @@ bash ollama/serve.sh
 | [llama.cpp](llamacpp/README.md) | 218 tok/s | 양자화로 메모리 절감, DSpark 동작, 로드 30초 |
 | [Ollama](ollama/README.md) | 124 tok/s | 모델 관리 편의. 분할 GGUF 병합 필요 |
 
-실측 비교와 선택 기준은 [backends.md](backends.md)를 보세요.
+실측 비교와 선택 기준은 [backends.md](docs/backends.md)를 보세요.
 
 ## Cost & cleanup
 
@@ -183,12 +183,12 @@ nvidia-smi --query-gpu=index,memory.used --format=csv
 
 | 문서 | 내용 |
 |---|---|
-| [deepseek-v4-flash.md](deepseek-v4-flash.md) | 모델 아키텍처, 체크포인트 4종 차이 |
-| [benchmark.md](benchmark.md) | 시나리오 5종 처리량과 지연시간 (p50/p95/p99) |
-| [tuning.md](tuning.md) | vLLM 최적화. 프리셋 3종, 튜닝 절차, `/metrics` 진단 |
-| [backends.md](backends.md) | vLLM vs llama.cpp vs Ollama 실측, GGUF 양자화 4종 |
-| [serving.md](serving.md) | 모델별 GPU 사이징 계산 (V4-Pro, GLM-5.2, Kimi K3 비교) |
-| [gateway.md](gateway.md) | API 게이트웨이 (LiteLLM / ALB / API Gateway) |
+| [deepseek-v4-flash.md](docs/deepseek-v4-flash.md) | 모델 아키텍처, 체크포인트 4종 차이 |
+| [benchmark.md](docs/benchmark.md) | 시나리오 5종 처리량과 지연시간 (p50/p95/p99) |
+| [tuning.md](docs/tuning.md) | vLLM 최적화. 프리셋 3종, 튜닝 절차, `/metrics` 진단 |
+| [backends.md](docs/backends.md) | vLLM vs llama.cpp vs Ollama 실측, GGUF 양자화 4종 |
+| [serving.md](docs/serving.md) | 모델별 GPU 사이징 계산 (V4-Pro, GLM-5.2, Kimi K3 비교) |
+| [gateway.md](docs/gateway.md) | API 게이트웨이 (LiteLLM / ALB / API Gateway) |
 
 **실행 스크립트**
 
@@ -198,7 +198,8 @@ nvidia-smi --query-gpu=index,memory.used --format=csv
 | `uv/setup.sh`, `uv/serve.sh` | vLLM uv 설치와 실행 |
 | [llamacpp/](llamacpp/README.md) | GGUF 다운로드, llama-server 실행, DSpark |
 | [ollama/](ollama/README.md) | GGUF 병합, Ollama 실행 |
-| [quantbench/](quantbench/README.md) | 레이턴시 측정 스크립트와 결과 JSON |
+| [quantbench/](quantbench/README.md) | 백엔드별 레이턴시 측정 스크립트와 결과 JSON |
+| `bench_results/` | vLLM `vllm bench serve` 원본 출력 (시나리오 5종) |
 | `client_example.py` | OpenAI 호환 클라이언트 예제 |
 | [sagemaker/](sagemaker/README.md) | SageMaker 실시간 엔드포인트 배포 |
 

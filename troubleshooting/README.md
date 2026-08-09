@@ -62,4 +62,4 @@ vLLM은 `non-default args` 줄에서 실제 적용된 플래그를 확인할 수
 docker logs <container> 2>&1 | grep "non-default args"
 ```
 
-부하 중 병목 진단은 [../tuning.md](../tuning.md)의 `/metrics` 절을 보세요.
+부하 중 병목 진단은 [tuning.md](../docs/tuning.md)의 `/metrics` 절을 보세요.

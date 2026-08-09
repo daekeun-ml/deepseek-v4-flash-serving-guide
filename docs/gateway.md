@@ -1,6 +1,6 @@
 # API 게이트웨이 구성
 
-DeepSeek-V4-Flash-0731 vLLM 서버([README.md](README.md)) 또는 SageMaker 엔드포인트([sagemaker/](sagemaker/README.md)) 앞에 게이트웨이를 두는 방법입니다.
+DeepSeek-V4-Flash-0731 vLLM 서버([README.md](../README.md)) 또는 SageMaker 엔드포인트([sagemaker/](../sagemaker/README.md)) 앞에 게이트웨이를 두는 방법입니다.
 
 - vLLM 서버 자체 튜닝: [tuning.md](tuning.md)
 - 실측 성능 근거: [benchmark.md](benchmark.md)
@@ -192,7 +192,7 @@ for chunk in resp:
     print(chunk.choices[0].delta.content or "", end="", flush=True)
 ```
 
-[client_example.py](client_example.py)의 `base_url`만 4000번으로 바꾸면 non-think, think-high, tool-calling 모두 그대로 동작합니다(실측 확인).
+[client_example.py](../client_example.py)의 `base_url`만 4000번으로 바꾸면 non-think, think-high, tool-calling 모두 그대로 동작합니다(실측 확인).
 
 ### 여러 백엔드 묶기: 폴백과 로드밸런싱은 다르다
 

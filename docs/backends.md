@@ -2,9 +2,9 @@
 
 DeepSeek-V4-Flash-0731을 RTX 6000 Pro Blackwell ×2에서 세 가지 방식으로 서빙하고 같은 조건으로 측정한 결과입니다.
 
-- 실행 스크립트: [llamacpp/](llamacpp/README.md), [ollama/](ollama/README.md), vLLM은 [README.md](README.md)
+- 실행 스크립트: [llamacpp/](../llamacpp/README.md), [ollama/](../ollama/README.md), vLLM은 [README.md](../README.md)
 - vLLM 튜닝: [tuning.md](tuning.md)
-- 측정 스크립트: [quantbench/latency.py](quantbench/latency.py), 결과 JSON: `quantbench/results/`
+- 측정 스크립트: [quantbench/latency.py](../quantbench/latency.py), 결과 JSON: `quantbench/results/`
 
 ## 결론부터
 
@@ -89,7 +89,7 @@ Q2로 고정하고 9가지를 측정했습니다. 기준선은 c=1 60.1 tok/s, c
 
 ### DSpark 추측 디코딩
 
-**vLLM에서 포기했던 기능이 llama.cpp에서는 동작합니다.** vLLM + SM120에서는 FlashInfer 커널 미지원으로 크래시하는데([troubleshooting/dspark-sm120-crash.md](troubleshooting/dspark-sm120-crash.md)), llama.cpp는 자체 CUDA 커널을 써서 문제없이 로드됩니다.
+**vLLM에서 포기했던 기능이 llama.cpp에서는 동작합니다.** vLLM + SM120에서는 FlashInfer 커널 미지원으로 크래시하는데([dspark-sm120-crash.md](../troubleshooting/dspark-sm120-crash.md)), llama.cpp는 자체 CUDA 커널을 써서 문제없이 로드됩니다.
 
 드래프트 모델은 **0731 GGUF 저장소에만** 있습니다(10.9 GB).
 
@@ -108,7 +108,7 @@ DSPARK=1 bash llamacpp/serve.sh
 
 실측 드래프트 수락률은 56.1%였습니다(32/57 수락, 평균 2.68토큰). 배치가 이미 GPU를 채우면 드래프트 계산이 낭비되므로 **동시 요청이 많을 때는 끄세요.**
 
-Ollama에서는 이 기능을 쓸 수 없습니다: [troubleshooting/ollama-dspark-unsupported.md](troubleshooting/ollama-dspark-unsupported.md)
+Ollama에서는 이 기능을 쓸 수 없습니다: [ollama-dspark-unsupported.md](../troubleshooting/ollama-dspark-unsupported.md)
 
 ### `-ncmoe`로 GPU 메모리 절약
 
@@ -120,7 +120,7 @@ MoE 전문가 가중치를 CPU RAM으로 넘깁니다. GPU가 부족해 아예 �
 | `-ncmoe 10` | 28.5 GB (-40%) | 37.3 (-38%) |
 | `-ncmoe 20` | 8.8 GB (-81%) | 28.4 (-53%) |
 
-메모리 절감분과 속도 손실이 거의 비례합니다. 상세: [troubleshooting/llamacpp-cpu-moe-offload.md](troubleshooting/llamacpp-cpu-moe-offload.md)
+메모리 절감분과 속도 손실이 거의 비례합니다. 상세: [llamacpp-cpu-moe-offload.md](../troubleshooting/llamacpp-cpu-moe-offload.md)
 
 ### 동작하지 않는 옵션
 
@@ -129,15 +129,15 @@ MoE 전문가 가중치를 CPU RAM으로 넘깁니다. GPU가 부족해 아예 �
 | `--split-mode row` | `device CUDA0 does not support split buffers` |
 | `--split-mode tensor` | 로드 실패 (EXPERIMENTAL) |
 
-vLLM의 TP=2에 해당하는 병렬 계산을 쓸 수 없습니다. 기본값 `layer`는 파이프라인 방식이라 한 GPU가 계산할 때 다른 쪽이 대기합니다. **c=8에서 TPOT가 정확히 2.09배 차이나는 것이 이 구조로 설명됩니다**(vLLM 16.3ms, llama-server 34.0ms). 상세: [troubleshooting/llamacpp-split-mode.md](troubleshooting/llamacpp-split-mode.md)
+vLLM의 TP=2에 해당하는 병렬 계산을 쓸 수 없습니다. 기본값 `layer`는 파이프라인 방식이라 한 GPU가 계산할 때 다른 쪽이 대기합니다. **c=8에서 TPOT가 정확히 2.09배 차이나는 것이 이 구조로 설명됩니다**(vLLM 16.3ms, llama-server 34.0ms). 상세: [llamacpp-split-mode.md](../troubleshooting/llamacpp-split-mode.md)
 
 ## 겪은 문제
 
 | 문제 | 해결 |
 |---|---|
-| Ollama가 분할 GGUF를 거부 | 단일 파일로 병합 ([ollama/merge.sh](ollama/merge.sh), [상세](troubleshooting/ollama-split-gguf.md)) |
-| Ollama + DSpark 크래시 | 우회 불가. llama-server를 쓸 것 ([상세](troubleshooting/ollama-dspark-unsupported.md)) |
-| `--split-mode row`/`tensor` 로드 실패 | 우회 불가 ([상세](troubleshooting/llamacpp-split-mode.md)) |
+| Ollama가 분할 GGUF를 거부 | 단일 파일로 병합 ([ollama/merge.sh](../ollama/merge.sh), [상세](../troubleshooting/ollama-split-gguf.md)) |
+| Ollama + DSpark 크래시 | 우회 불가. llama-server를 쓸 것 ([상세](../troubleshooting/ollama-dspark-unsupported.md)) |
+| `--split-mode row`/`tensor` 로드 실패 | 우회 불가 ([상세](../troubleshooting/llamacpp-split-mode.md)) |
 | 디스크가 3배로 늘어남 | Ollama는 원본, 병합본, 저장소 복사본을 모두 가짐 (Q2 기준 약 301 GB) |
 
 **reasoning 필드명이 백엔드마다 다릅니다.** 측정 스크립트를 만들 때 걸리는 함정입니다.
@@ -157,7 +157,7 @@ vLLM의 TP=2에 해당하는 병렬 계산을 쓸 수 없습니다. 기본값 `l
 
 | 백엔드 | 이미지 | uv 설치 |
 |---|---|---|
-| vLLM | `vllm/vllm-openai:v0.25.0` | 가능하지만 우회 4가지 필요 ([troubleshooting/uv-native-setup.md](troubleshooting/uv-native-setup.md)) |
+| vLLM | `vllm/vllm-openai:v0.25.0` | 가능하지만 우회 4가지 필요 ([uv-native-setup.md](../troubleshooting/uv-native-setup.md)) |
 | llama.cpp | `ghcr.io/ggml-org/llama.cpp:server-cuda` | `llama-cpp-python`은 CUDA 휠이 cu125까지만 제공(이 서버는 CUDA 13) |
 | Ollama | `ollama/ollama:latest` | 불가 (Go 단일 바이너리) |
 

@@ -1,9 +1,8 @@
 # 모델 가중치 (별도 다운로드, README 참고)
 models/
 
-# 벤치마크 서버 로그, 원본 결과 (재현 가능, benchmark.md에 정리본 반영됨)
+# 벤치마크 서버 로그 (재현 가능)
 server.log
-bench_results/
 
 # 에이전트/도구 상태
 .omc/

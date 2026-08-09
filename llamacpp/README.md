@@ -1,6 +1,6 @@
 # llama.cpp 서빙
 
-GGUF 양자화본을 `llama-server`로 서빙합니다. 실측 비교는 [../backends.md](../backends.md)를 보세요.
+GGUF 양자화본을 `llama-server`로 서빙합니다. 실측 비교는 [backends.md](../docs/backends.md)를 보세요.
 
 ## 빠른 시작
 

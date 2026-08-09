@@ -134,7 +134,7 @@ nvidia-smi --query-gpu=index,memory.used --format=csv,noheader
 
 ## 참고
 
-- [../backends.md](../backends.md) 백엔드 실측 비교
+- [backends.md](../docs/backends.md) 백엔드 실측 비교
 - [../llamacpp/README.md](../llamacpp/README.md) llama-server 서빙
-- [../tuning.md](../tuning.md) vLLM 쪽 튜닝 (TP는 조정 대상이 아님)
+- [tuning.md](../docs/tuning.md) vLLM 쪽 튜닝 (TP는 조정 대상이 아님)
 - [llama.cpp server 플래그](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)

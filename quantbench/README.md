@@ -1,7 +1,7 @@
 # 레이턴시 측정
 
 vLLM, llama-server, Ollama에 같은 조건으로 요청해 TTFT, TPOT, 처리량을 비교합니다.
-측정 결과 해석은 [../backends.md](../backends.md)를 보세요.
+측정 결과 해석은 [backends.md](../docs/backends.md)를 보세요.
 
 ## 사용법
 
@@ -22,7 +22,7 @@ python3 latency.py http://localhost:8001/v1/chat/completions 8 32 x lcpp-q2-c8
 python3 latency.py http://localhost:11434/v1/chat/completions 8 32 ds-q2 ollama-q2-c8
 ```
 
-부하 형태는 [../benchmark.md](../benchmark.md)의 S1(c=1), S2(c=8)과 같습니다. 입력 약 200토큰, 출력 200토큰입니다.
+부하 형태는 [benchmark.md](../docs/benchmark.md)의 S1(c=1), S2(c=8)과 같습니다. 입력 약 200토큰, 출력 200토큰입니다.
 
 ## 주의
 

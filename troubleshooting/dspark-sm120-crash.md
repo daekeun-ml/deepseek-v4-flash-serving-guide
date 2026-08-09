@@ -76,7 +76,7 @@ DSPARK=1 bash llamacpp/serve.sh
 
 드래프트 수락률은 56.1%였습니다(32/57 수락, 평균 2.68토큰). 동시 요청이 많으면 드래프트 계산이 낭비되므로 단일 사용자일 때만 켜세요.
 
-단 GGUF 양자화본을 써야 하고 처리량은 vLLM보다 낮습니다. 선택 기준은 [../backends.md](../backends.md), 사용법은 [../llamacpp/README.md](../llamacpp/README.md)를 보세요.
+단 GGUF 양자화본을 써야 하고 처리량은 vLLM보다 낮습니다. 선택 기준은 [backends.md](../docs/backends.md), 사용법은 [../llamacpp/README.md](../llamacpp/README.md)를 보세요.
 
 **Ollama에서는 불가능합니다.** 추측 디코딩 방식을 MTP로 고정 호출해 크래시합니다: [ollama-dspark-unsupported.md](ollama-dspark-unsupported.md)
 

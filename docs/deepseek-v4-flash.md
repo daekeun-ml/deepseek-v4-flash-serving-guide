@@ -66,9 +66,9 @@ Pro가 파라미터 수는 6배 더 크지만, 가중치 용량은 Flash가 Pro�
 | NVFP4 | `nvidia/DeepSeek-V4-Flash-NVFP4` | MTP | NVIDIA가 재양자화한 버전 |
 | DSpark | `deepseek-ai/DeepSeek-V4-Flash-DSpark` | DSpark | preview 가중치 + DSpark 모듈만 추가 |
 
-**\*추측 디코딩(speculative decoding)**: 작은 초안 모델이 여러 토큰을 미리 예측해두고, 본 모델이 이를 검증만 하면서 속도를 높이는 기법. `MTP`와 `DSpark`는 이 초안을 만드는 두 가지 방식이며, **체크포인트마다 둘 중 하나만 내장**되어 있어 섞어 쓸 수 없습니다. DSpark의 구조와 RTX 6000 Pro에서 발생하는 문제는 [troubleshooting/dspark-sm120-crash.md](troubleshooting/dspark-sm120-crash.md)에서 다룹니다.
+**\*추측 디코딩(speculative decoding)**: 작은 초안 모델이 여러 토큰을 미리 예측해두고, 본 모델이 이를 검증만 하면서 속도를 높이는 기법. `MTP`와 `DSpark`는 이 초안을 만드는 두 가지 방식이며, **체크포인트마다 둘 중 하나만 내장**되어 있어 섞어 쓸 수 없습니다. DSpark의 구조와 RTX 6000 Pro에서 발생하는 문제는 [dspark-sm120-crash.md](../troubleshooting/dspark-sm120-crash.md)에서 다룹니다.
 
-> 이 가이드는 최신 릴리즈인 **0731**을 선택했습니다. 다만 DSpark를 쓰려면 알려진 버그를 피해야 하므로, 최종적으로는 **추측 디코딩 없이** 서빙했습니다. 실행 방법은 [README.md](README.md) 참고.
+> 이 가이드는 최신 릴리즈인 **0731**을 선택했습니다. 다만 DSpark를 쓰려면 알려진 버그를 피해야 하므로, 최종적으로는 **추측 디코딩 없이** 서빙했습니다. 실행 방법은 [README.md](../README.md) 참고.
 
 ## 검증 결과
 
@@ -77,7 +77,7 @@ Pro가 파라미터 수는 6배 더 크지만, 가중치 용량은 Flash가 Pro�
 - GPU당 실사용 메모리: 92.4 GiB / 97.9 GiB
 - 확보한 KV 캐시: 301,529 토큰 (131K 컨텍스트 기준 동시 요청 2.3개 처리 가능)
 
-실행 방법과 트러블슈팅은 [README.md](README.md)에 정리했습니다.
+실행 방법과 트러블슈팅은 [README.md](../README.md)에 정리했습니다.
 
 ## 참고 링크
 

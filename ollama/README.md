@@ -1,6 +1,6 @@
 # Ollama 서빙
 
-GGUF를 Ollama로 서빙합니다. 실측 비교는 [../backends.md](../backends.md)를 보세요.
+GGUF를 Ollama로 서빙합니다. 실측 비교는 [backends.md](../docs/backends.md)를 보세요.
 
 ## 빠른 시작
 

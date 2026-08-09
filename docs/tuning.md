@@ -2,7 +2,7 @@
 
 DeepSeek-V4-Flash-0731을 RTX 6000 Pro Blackwell ×2에서 서빙할 때의 튜닝 가이드입니다. 모든 플래그는 **vLLM 0.25.0**에서 `vllm serve --help=all`로 존재를 확인했고, 기본값과 실측값은 구동 중인 서버의 로그와 `/metrics`에서 가져왔습니다.
 
-- 기본 구성과 실행: [README.md](README.md)
+- 기본 구성과 실행: [README.md](../README.md)
 - 실측 성능: [benchmark.md](benchmark.md)
 - 게이트웨이 계층: [gateway.md](gateway.md)
 
@@ -78,7 +78,7 @@ Equivalent to -cc.mode=none.
 
 ## 프리셋
 
-[benchmark.md](benchmark.md)의 S1~S5를 근거로 세 방향을 제시합니다. 공통 플래그(TP, 파서, FP8 KV)는 [README.md](README.md)와 동일하고 아래는 **차이나는 부분만** 표시했어요.
+[benchmark.md](benchmark.md)의 S1~S5를 근거로 세 방향을 제시합니다. 공통 플래그(TP, 파서, FP8 KV)는 [README.md](../README.md)와 동일하고 아래는 **차이나는 부분만** 표시했어요.
 
 ### 기준선 (현재 `serve.sh`)
 
@@ -170,7 +170,7 @@ KV 캐시가 7.75 GiB뿐이라 컨텍스트 길이가 동시성을 직접 결정
 
 FP8은 FP16 대비 KV 캐시를 절반으로 줄여 동시성을 두 배로 만듭니다. 이 환경에서는 필수예요.
 
-0.25.0이 지원하는 더 공격적인 옵션(`int8_per_token_head`, `nvfp4`, `turboquant_*` 계열)도 있지만, DeepSeek-V4는 `fp8_ds_mla` 같은 전용 경로가 있고 모델 기본값이 이미 fp8입니다. 검증 없이 바꾸면 품질 저하나 커널 미지원 크래시로 이어질 수 있으니 [README.md](README.md)에서 검증된 `fp8`을 유지하는 것을 권합니다.
+0.25.0이 지원하는 더 공격적인 옵션(`int8_per_token_head`, `nvfp4`, `turboquant_*` 계열)도 있지만, DeepSeek-V4는 `fp8_ds_mla` 같은 전용 경로가 있고 모델 기본값이 이미 fp8입니다. 검증 없이 바꾸면 품질 저하나 커널 미지원 크래시로 이어질 수 있으니 [README.md](../README.md)에서 검증된 `fp8`을 유지하는 것을 권합니다.
 
 ### `--max-num-seqs`는 TPOT와 처리량의 저울
 
@@ -261,7 +261,7 @@ for f in ['baseline.json','tuned.json']:
 | 플래그 | 이유 |
 |---|---|
 | `--tensor-parallel-size` | 가중치 148.7 GiB는 96 GiB 1장에 안 들어감. TP=2가 하한이고 GPU가 2장이라 선택지 없음 |
-| `--speculative-config` | 0731 체크포인트는 DSpark만 내장하고 SM120에서 크래시. [troubleshooting/dspark-sm120-crash.md](troubleshooting/dspark-sm120-crash.md) |
+| `--speculative-config` | 0731 체크포인트는 DSpark만 내장하고 SM120에서 크래시. [dspark-sm120-crash.md](../troubleshooting/dspark-sm120-crash.md) |
 | `--block-size` | 이 모델에서 무시됨(지정 256, 실제 4). sparse attention 구조가 결정 |
 | `--enable-prefix-caching` | 이미 자동 활성 |
 | `--enable-chunked-prefill` | 이미 자동 활성 |
@@ -284,7 +284,7 @@ Prometheus로 수집한다면 `/metrics`를 **내부망으로만** 제한하세�
 
 ## 참고 링크
 
-- [README.md](README.md) 기본 서빙 구성과 각 플래그의 선택 근거
+- [README.md](../README.md) 기본 서빙 구성과 각 플래그의 선택 근거
 - [benchmark.md](benchmark.md) 이 문서가 인용한 S1~S5 실측값
 - [gateway.md](gateway.md) 게이트웨이 계층(인증, 쿼터, 스트리밍)
 - [serving.md](serving.md) 메모리 사이징 계산

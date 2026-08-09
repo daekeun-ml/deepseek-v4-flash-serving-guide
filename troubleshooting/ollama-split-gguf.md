@@ -93,5 +93,5 @@ llama-server만 쓴다면 원본 96.8 GB로 끝납니다. Ollama를 쓰려면 3�
 ## 참고
 
 - [../ollama/README.md](../ollama/README.md) Ollama 서빙 전체 흐름
-- [../backends.md](../backends.md) 백엔드 실측 비교
+- [backends.md](../docs/backends.md) 백엔드 실측 비교
 - [llama.cpp gguf-split](https://github.com/ggml-org/llama.cpp/tree/master/tools/gguf-split) 병합 도구

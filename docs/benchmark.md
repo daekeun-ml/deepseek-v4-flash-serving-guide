@@ -1,6 +1,6 @@
 # DeepSeek-V4-Flash 서빙 벤치마크
 
-RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시, 추측 디코딩 비활성화 구성(자세한 내용은 [README.md](README.md) 참고)에서 실측한 결과입니다.
+RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시, 추측 디코딩 비활성화 구성(자세한 내용은 [README.md](../README.md) 참고)에서 실측한 결과입니다.
 
 > ⚠️ DeepSeek-V4-Pro는 대상에서 제외했습니다. Pro는 가중치가 805 GiB라 최소 H200 8장(1128 GiB) 이상이 필요하며, RTX 6000 Pro 2장(192 GiB)으로는 로드 자체가 불가능합니다. 따라서 이 벤치마크의 대상은 V4-**Flash**입니다.
 
@@ -96,8 +96,23 @@ S4(입력 4,004토큰)는 S2(입력 204토큰)보다 TTFT p50이 약 6.12배 높
 
 S5(출력 1,000토큰)의 E2EL p50은 18739.05ms로 다른 시나리오보다 훨씬 깁니다. 동시성이 동일한 S2, S4, S5(모두 c=8)를 비교하면, 요청당 처리 시간이 길수록 처리 가능한 요청 수(req/s)가 반비례로 줄어듭니다. S5의 요청 처리율(0.35 req/s)은 S2(2.23 req/s)의 약 1/6 수준입니다. 출력이 긴 요청은 서버 슬롯을 오래 점유하므로, 동시성 설정이 같아도 실제 처리 가능한 사용자 수는 줄어듭니다.
 
+## 원본 데이터
+
+위 표의 수치는 `vllm bench serve` 출력을 정리한 것입니다. 원본 JSON은 `bench_results/`에 있어 직접 대조할 수 있습니다.
+
+```bash
+python3 -c "
+import json
+d = json.load(open('bench_results/s2_medium_concurrency_c8.json'))
+print(d['p50_ttft_ms'], d['p95_ttft_ms'], d['p50_tpot_ms'], d['output_throughput'])
+"
+```
+
+다른 백엔드(llama.cpp, Ollama)와의 비교는 [backends.md](backends.md), 측정 결과는 `quantbench/results/`에 있습니다.
+
 ## 참고 링크
 
 - [vLLM Bench 문서](https://docs.vllm.ai/en/latest/) `vllm bench serve` 사용법
 - [deepseek-v4-flash.md](deepseek-v4-flash.md) 벤치마크 대상 모델 설명
-- [README.md](README.md) 서빙 구성과 실행 방법
+- [backends.md](backends.md) vLLM vs llama.cpp vs Ollama 비교
+- [README.md](../README.md) 서빙 구성과 실행 방법

@@ -91,7 +91,7 @@ Q2로 고정하고 GPU 2장 환경에서 측정했습니다. 기준선은 c=1 60
 
 그래서 이렇게 접근하는 게 맞습니다.
 
-1. **먼저 낮은 양자화를 시도합니다.** Q4를 `-ncmoe`로 밀어넣기보다 Q2를 그냥 쓰는 편이 빠릅니다. 이 모델은 양자화를 낮춰도 속도가 거의 같고([backends.md](../backends.md)), 메모리만 줄어듭니다
+1. **먼저 낮은 양자화를 시도합니다.** Q4를 `-ncmoe`로 밀어넣기보다 Q2를 그냥 쓰는 편이 빠릅니다. 이 모델은 양자화를 낮춰도 속도가 거의 같고([backends.md](../docs/backends.md)), 메모리만 줄어듭니다
 2. **그래도 부족하면 N을 최소로** 잡습니다. GPU에 들어갈 만큼만 넘기세요
 3. 동시 요청이 많은 서빙 용도라면 `-ncmoe`는 부적합합니다
 
@@ -111,7 +111,7 @@ llama.cpp의 GPT-OSS 튜닝 논의에서도 같은 점을 지적합니다.
 
 ## 참고
 
-- [../backends.md](../backends.md) 양자화별 메모리와 속도 실측
+- [backends.md](../docs/backends.md) 양자화별 메모리와 속도 실측
 - [../llamacpp/README.md](../llamacpp/README.md) llama-server 서빙
 - [llamacpp-split-mode.md](llamacpp-split-mode.md) GPU 분할 방식 제약
 - [llama.cpp GPT-OSS 튜닝 논의](https://github.com/ggml-org/llama.cpp/discussions/15396)
