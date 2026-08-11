@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # DeepSeek-V4-Flash-0731 서빙 (RTX 6000 Pro Blackwell x2, SM120, NVLink 없음/PCIe)
 #
-# 체크포인트: deepseek-ai/DeepSeek-V4-Flash-0731 (공식 릴리즈, 155.4 GiB, weights 148.7 GiB)
+# 체크포인트: deepseek-ai/DeepSeek-V4-Flash-0731 (공식 릴리즈, weights 155.4 GiB / 166.9 GB)
 # vLLM 이미지: v0.25.0 고정 (vLLM 공식 recipe 권장값. v0.26.0은 DeepSeek-V4 FlashMLA
 #   회귀 버그(#49922)가 있어 회피)
 # 추측 디코딩: 사용 안 함. 0731 체크포인트는 MTP 헤드가 없고 DSpark 드래프트 모듈만
@@ -10,7 +10,7 @@
 #   flashinfer#3989 미머지, GB10(SM121)에서만 로컬 패치로 검증됨. 상세: troubleshooting/dspark-sm120-crash.md
 #
 # GPU간 NVLink 없음(PIX/PCIe Gen5) -> TP8급 all-reduce에는 불리하나 TP=2라 문제 되지 않음.
-# weights 148.7 GiB는 GPU 1장(96 GiB)에 못 들어가므로 TP=2 필수.
+# weights 155.4 GiB는 GPU 1장(96 GiB)에 못 들어가므로 TP=2 필수.
 #
 # FlashInfer 버전 핫픽스: v0.25.0/0.25.1이 pin한 flashinfer-python==0.6.13에는
 # DeepSeek-V4 sparse-SWA decode가 호출하는 swa_topk_lens 등 kwarg가 없음(0.6.14부터

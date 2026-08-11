@@ -6,7 +6,7 @@ RTX 6000 Pro Blackwell 2장(SM120, AWS `g7e.12xlarge`)으로 **DeepSeek-V4-Flash
 
 ## Why this guide
 
-**H100/H200/B200/B300이 부담스러울 때 가장 먼저 떠오르는 대안이 RTX 6000 Pro Blackwell입니다.** 장당 96 GiB를 제공하고 FP4를 네이티브로 지원하므로, 두 장이면 192 GiB로 148.7 GiB 가중치를 수용할 수 있습니다. AWS에서는 `g7e` 계열이 이 GPU를 씁니다.
+**H100/H200/B200/B300이 부담스러울 때 가장 먼저 떠오르는 대안이 RTX 6000 Pro Blackwell입니다.** 장당 96 GiB를 제공하고 FP4를 네이티브로 지원하므로, 두 장이면 192 GiB로 155.4 GiB 가중치를 수용할 수 있습니다. AWS에서는 `g7e` 계열이 이 GPU를 씁니다.
 
 문제는 용량 계산이 맞아도 실제 서빙이 순탄하지는 않다는 점입니다. 이 GPU는 데이터센터 GPU와 세 가지가 다릅니다.
 
@@ -33,7 +33,7 @@ RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시 구성입니다.
 
 | 항목 | 값 |
 |---|---|
-| GPU당 메모리 사용 | 92.4 / 97.9 GiB (94%) |
+| GPU당 메모리 사용 | 92.4 / 95.6 GiB (97%) |
 | KV 캐시 | 7.75 GiB, **301,529 토큰** |
 | 131K 컨텍스트 기준 동시 요청 | **2.3개** |
 | 기동 시간 | 5~6분 (가중치 로딩 + CUDA 그래프 캡처) |
@@ -50,7 +50,7 @@ RTX 6000 Pro Blackwell ×2, TP=2, FP8 KV 캐시 구성입니다.
 
 **검증한 기능**: 일반 채팅, think-high 추론 모드, tool calling (uv와 Docker 양쪽)
 
-**병목은 KV 캐시입니다.** 가중치 148.7 GiB가 192 GiB 중 대부분을 차지해 KV 캐시로 7.75 GiB만 남습니다. 컨텍스트를 65K로 줄이면 동시 요청이 4.6개, 32K면 9.2개로 늘어납니다. 프리셋 3종은 [tuning.md](docs/tuning.md)에 정리했습니다.
+**병목은 KV 캐시입니다.** 가중치 155.4 GiB가 192 GiB 중 대부분을 차지해 KV 캐시로 7.75 GiB만 남습니다. 컨텍스트를 65K로 줄이면 동시 요청이 4.6개, 32K면 9.2개로 늘어납니다. 프리셋 3종은 [tuning.md](docs/tuning.md)에 정리했습니다.
 
 ## Is this for you
 
@@ -87,7 +87,7 @@ vLLM 설치입니다. GGUF로만 쓸 거면 [Run (GGUF)](#run-gguf)로 건너뛰
 
 | 항목 | 값 |
 |---|---|
-| GPU | 96 GiB × 2 이상 (가중치 148.7 GiB가 1장엔 안 들어감) |
+| GPU | 96 GiB × 2 이상 (가중치 155.4 GiB가 1장엔 안 들어감) |
 | 디스크 | 여유 200 GiB 이상 (가중치 155 GiB + 여유분) |
 | vLLM | `0.25.0` 고정. `0.26.0`은 DeepSeek-V4 회귀 버그 있음 |
 | 추측 디코딩 | vLLM에서는 비활성화. SM120에서 크래시하므로 필요하면 [llamacpp/](llamacpp/README.md) |
@@ -103,7 +103,7 @@ uvx --from huggingface_hub hf download deepseek-ai/DeepSeek-V4-Flash-0731 \
 
 ## Run (vLLM)
 
-원본 가중치를 그대로 씁니다. 이 모델은 단일 정밀도가 아니라 **전문가 가중치는 FP4(4비트), 나머지는 FP8(8비트)**로 이미 양자화된 상태로 배포됩니다(`expert_dtype: fp4`, `quant_method: fp8`). 그래서 추가 양자화 없이 148.7 GiB입니다.
+원본 가중치를 그대로 씁니다. 이 모델은 단일 정밀도가 아니라 **전문가 가중치는 FP4(4비트), 나머지는 FP8(8비트)**로 이미 양자화된 상태로 배포됩니다(`expert_dtype: fp4`, `quant_method: fp8`). 그래서 추가 양자화 없이 155.4 GiB입니다.
 
 **Docker**
 
@@ -156,7 +156,7 @@ bash ollama/serve.sh
 
 | Backend | Weights | Throughput (c=8) | Notes |
 |---|---|---|---|
-| vLLM | FP4/FP8 148.7 GB | **407 tok/s** | Highest throughput, best for multi-user serving |
+| vLLM | FP4/FP8 155.4 GB | **407 tok/s** | Highest throughput, best for multi-user serving |
 | [llama-server](llamacpp/README.md) | GGUF Q2 96.8 GB | 218 tok/s | 30s load, DSpark works, best tail latency (p95 654ms) |
 | [Ollama](ollama/README.md) | GGUF Q2 96.8 GB | 124 tok/s | Easiest model management, needs GGUF merge |
 

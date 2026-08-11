@@ -9,7 +9,7 @@
 
 | 모델 | weights (실측) | 최소 인스턴스 | 권장 | 이유 |
 |---|---|---|---|---|
-| **DeepSeek-V4-Flash** | **148.7 GiB** | g7e.12xlarge (2 GPU) | **`g7e.24xlarge`** | G7e로 충분, P 불필요 |
+| **DeepSeek-V4-Flash-0731** | **155.4 GiB** | g7e.12xlarge (2 GPU) | **`g7e.24xlarge`** | G7e로 충분, P 불필요 |
 | **GLM-5.2-FP8** | **701.6 GiB** | p5e (1128 GiB) | **`ml.p5en.48xlarge`** TP8 | H200 이상 필수 |
 | **DeepSeek-V4-Pro** | **805.4 GiB** | p5e (1128 GiB) | **`ml.p5en.48xlarge`** TP8 | H200 이상 필수, 여유 적음 |
 | **Kimi K3** | **1453.7 GiB** | **`p6-b300`**(2148 GiB) | **`p6-b300.48xlarge`** TP8 | **B300 미만은 단일 노드 불가** |
@@ -26,10 +26,10 @@
 
 # 1단계: weights 실측
 
-파라미터 수로 추정하지 말고 HF API로 직접 셉니다.
+파라미터 수로 추정하지 말고 HF API로 직접 셉니다. **저장소 이름을 정확히 확인하세요.** `DeepSeek-V4-Flash`(preview)와 `DeepSeek-V4-Flash-0731`은 6.7 GiB 차이가 납니다.
 
 ```bash
-for m in zai-org/GLM-5.2-FP8 deepseek-ai/DeepSeek-V4-Flash deepseek-ai/DeepSeek-V4-Pro moonshotai/Kimi-K3; do
+for m in zai-org/GLM-5.2-FP8 deepseek-ai/DeepSeek-V4-Flash-0731 deepseek-ai/DeepSeek-V4-Pro moonshotai/Kimi-K3; do
   echo -n "$m  "
   curl -s "https://huggingface.co/api/models/$m?blobs=true" | jq '.usedStorage'
 done
@@ -37,7 +37,8 @@ done
 
 | 모델 | params | bytes | GB | **GiB** | B/param | GiB/GPU @TP8 | shards |
 |---|---|---|---|---|---|---|---|
-| `DeepSeek-V4-Flash` | 284B / 13B act | 159,641,337,663 | 159.6 | **148.7** | 0.562 | 18.6 | 46 |
+| `DeepSeek-V4-Flash-0731` | 284B / 13B act | 166,886,718,583 | 166.9 | **155.4** | 0.588 | 19.4 | 48 |
+| `DeepSeek-V4-Flash` (preview) | 284B / 13B act | 159,641,337,663 | 159.6 | **148.7** | 0.562 | 18.6 | 46 |
 | `GLM-5.2-FP8` | 753B | 753,375,793,584 | 753.4 | **701.6** | 1.000 | 87.7 | 141 |
 | `DeepSeek-V4-Pro` | 1.6T / 49B act | 864,761,623,612 | 864.8 | **805.4** | 0.540 | 100.7 | 64 |
 | `Kimi-K3` | 2.8T / 16-of-896 exp | 1,560,936,091,448 | 1560.9 | **1453.7** | 0.557 | **181.7** | 96 |
@@ -138,15 +139,15 @@ KV 예산 = GPU총메모리 × 0.92 − weights
 동시 시퀀스 = KV 예산 ÷ (KV/token × ctx_len)
 ```
 
-## DeepSeek-V4-Flash (148.7 GiB)
+## DeepSeek-V4-Flash-0731 (155.4 GiB)
 
 | 인스턴스 | GPU 메모리 | KV 예산 | 65K | 1M | 판정 |
 |---|---|---|---|---|---|
 | g7e.8xlarge (1×96) | 96 | - | - | - | ❌ weights 초과 |
-| g7e.12xlarge (2×96) | 192 | 28.0 | 94 | 5.9 | ✅ 최소, 가성비 |
-| **g7e.24xlarge (4×96)** | **384** | **204.6** | **692** | **43** | ✅ **권장** |
-| g7e.48xlarge (8×96) | 768 | 557.9 | 1888 | 118 | 과잉 |
-| p5en.48xlarge | 1128 | 889.1 | 3008 | 188 | 과잉 (weights가 13%) |
+| g7e.12xlarge (2×96) | 192 | 21.2 | 72 | 4.5 | ✅ 최소, 가성비 |
+| **g7e.24xlarge (4×96)** | **384** | **197.9** | **670** | **42** | ✅ **권장** |
+| g7e.48xlarge (8×96) | 768 | 551.2 | 1865 | 117 | 과잉 |
+| p5en.48xlarge | 1128 | 882.4 | 2986 | 187 | 과잉 (weights가 14%) |
 
 ## GLM-5.2-FP8 (701.6 GiB)
 
@@ -318,7 +319,7 @@ weights(GiB) = safetensors bytes / 1024³        ← 파라미터 수로 추정 
    < 707 GiB      707~1318 GiB           > 1318 GiB
   (g7e.48xl)      (p6-b200 예산)          (B200 8장 초과)
         │              │                      │
-   V4-Flash 148.7      │                 Kimi K3 1453.7
+   V4-Flash 155.4      │                 Kimi K3 1453.7
    G7e로 충분     H200 이상 (p5e/p5en TP8)  KV 13.5 KiB/tok
    TP2~4               │                 (93 layer 중 24개만)
    g7e.24xlarge   ┌────┴────┐                 │

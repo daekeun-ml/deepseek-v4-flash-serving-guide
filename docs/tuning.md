@@ -16,7 +16,7 @@ GPU KV cache size: 301,529 tokens
 Maximum concurrency for 131,072 tokens per request: 2.30x
 ```
 
-가중치 148.7 GiB가 192 GiB(96×2) 중 대부분을 차지하고, KV 캐시로 남는 것이 **GPU당 7.75 GiB뿐**입니다. 결과가 마지막 줄이에요. `--max-model-len 131072`를 꽉 채운 요청은 **동시에 2.3개**밖에 들어가지 않습니다.
+가중치 155.4 GiB가 192 GiB(96×2) 중 대부분을 차지하고, KV 캐시로 남는 것이 **GPU당 7.75 GiB뿐**입니다. 결과가 마지막 줄이에요. `--max-model-len 131072`를 꽉 채운 요청은 **동시에 2.3개**밖에 들어가지 않습니다.
 
 여기서 두 가지가 따라옵니다.
 
@@ -164,7 +164,7 @@ KV 캐시가 7.75 GiB뿐이라 컨텍스트 길이가 동시성을 직접 결정
 
 전체 메모리의 1%p는 약 0.96 GiB지만 KV 캐시 7.75 GiB 기준으로는 **12%**입니다. 로그가 0.9407을 권하는 이유가 여기 있어요.
 
-올릴 때 주의할 점은 OOM이 기동 시점이 아니라 **부하가 걸린 뒤** 터질 수 있다는 것입니다. 0.94를 넘기면 S3 수준의 부하로 반드시 검증하세요. 현재 GPU 사용량은 92,959 MiB / 97,887 MiB(95%)입니다.
+올릴 때 주의할 점은 OOM이 기동 시점이 아니라 **부하가 걸린 뒤** 터질 수 있다는 것입니다. 0.94를 넘기면 S3 수준의 부하로 반드시 검증하세요. 현재 GPU 사용량은 92,959 MiB / 97,887 MiB(95%)입니다. GiB로는 90.8 / 95.6 GiB입니다.
 
 ### `--kv-cache-dtype fp8`은 이미 최선
 
@@ -260,7 +260,7 @@ for f in ['baseline.json','tuned.json']:
 
 | 플래그 | 이유 |
 |---|---|
-| `--tensor-parallel-size` | 가중치 148.7 GiB는 96 GiB 1장에 안 들어감. TP=2가 하한이고 GPU가 2장이라 선택지 없음 |
+| `--tensor-parallel-size` | 가중치 155.4 GiB는 96 GiB 1장에 안 들어감. TP=2가 하한이고 GPU가 2장이라 선택지 없음 |
 | `--speculative-config` | 0731 체크포인트는 DSpark만 내장하고 SM120에서 크래시. [dspark-sm120-crash.md](../troubleshooting/dspark-sm120-crash.md) |
 | `--block-size` | 이 모델에서 무시됨(지정 256, 실제 4). sparse attention 구조가 결정 |
 | `--enable-prefix-caching` | 이미 자동 활성 |

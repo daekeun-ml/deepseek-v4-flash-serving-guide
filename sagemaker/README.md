@@ -40,7 +40,7 @@
 | 추측 디코딩 | 비활성화 (DSpark가 SM120에서 크래시) | MTP 사용 | H200(SM90)에서는 DSpark도 정상 동작하지만, 로컬 검증과 조건을 맞추기 위해 MTP로 통일 |
 | FlashInfer 버전 핫픽스 | 필요 (`0.6.14`로 수동 업그레이드) | 불필요 | 이 문제는 SM120류 GPU 전용이 아니라 vLLM 0.25.0/0.25.1의 버전 pin 자체 문제이므로, H200에서도 이론상 발생 가능합니다. DLC 이미지가 수정된 버전을 사용하는지 배포 전 확인 권장 ([../troubleshooting/flashinfer-version-mismatch.md](../troubleshooting/flashinfer-version-mismatch.md)) |
 
-더 저렴한 인스턴스로 배포하려면: DeepSeek-V4-Flash 가중치는 148.7 GiB이므로 `ml.g6e.12xlarge`(2×L40S, 96 GiB)처럼 더 작은 인스턴스로도 TP=2 구성이 가능합니다. 사이징 계산은 [serving.md](../docs/serving.md) 참고.
+더 저렴한 인스턴스로 배포하려면: 가중치가 155.4 GiB이므로 `ml.g6e.12xlarge`(L40S 4장, 총 192 GB = 178.8 GiB)로도 TP=4 구성이 가능합니다. 다만 여유가 23 GiB뿐이라 KV 캐시가 크게 줄어듭니다. L40S는 장당 48 GB이므로 2장(96 GB)으로는 가중치가 들어가지 않습니다. 사이징 계산은 [serving.md](../docs/serving.md) 참고.
 
 ## 성능 프리셋
 
